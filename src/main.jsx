@@ -10,11 +10,11 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         {/* Halaman Utama */}
-        <Route path='/' element={<App />} />
-
+        <Route path="/" element={<App />} />
+        
         {/* Halaman Khusus Jaringan Stokis */}
-        <Route path='/list-stokis' element={<ListStokis />} />
+        <Route path="/list-stokis" element={<ListStokis />} />
       </Routes>
     </BrowserRouter>
-  </StrictMode>
+  </StrictMode>,
 )

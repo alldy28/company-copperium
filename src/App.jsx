@@ -1,18 +1,20 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import logoCopperium from './assets/logo-coppperium.png'
+import { motion, AnimatePresence } from 'framer-motion'
 import './index.css'
-import { motion } from 'framer-motion'
 
 function App () {
-  // --- FUNGSI SCROLL ---
+  const [isOpen, setIsOpen] = useState(false)
+
   const scrollToSection = id => {
+    setIsOpen(false)
     const element = document.getElementById(id)
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
     }
   }
 
-  // --- ANIMASI ---
   const fadeUpVariant = {
     hidden: { opacity: 0, y: 40 },
     visible: {
@@ -25,8 +27,8 @@ function App () {
   return (
     <div className='min-h-screen bg-darkBg text-white overflow-x-hidden font-sans'>
       {/* --- NAVBAR --- */}
-      <nav className='fixed w-full top-0 z-50 flex justify-between items-center px-6 md:px-16 py-4 bg-black/80 backdrop-blur-md border-b border-gray-800'>
-        {/* BAGIAN LOGO */}
+      <nav className='fixed w-full top-0 z-[100] flex justify-between items-center px-6 md:px-16 py-4 bg-black/80 backdrop-blur-md border-b border-gray-800'>
+        {/* LOGO */}
         <div
           className='flex items-center gap-3 cursor-pointer'
           onClick={() => scrollToSection('home')}
@@ -36,12 +38,12 @@ function App () {
             alt='Logo Copperium'
             className='w-10 h-10 md:w-12 md:h-12 object-contain'
           />
-          <div className='text-xl md:text-2xl font-extrabold text-copper tracking-[0.15em] hidden sm:block'>
+          <div className='text-xl md:text-2xl font-extrabold text-copper tracking-[0.15em]'>
             COPPERIUM
           </div>
         </div>
 
-        {/* Menu Navigasi */}
+        {/* DESKTOP MENU */}
         <div className='hidden md:flex gap-8 items-center'>
           <button
             onClick={() => scrollToSection('home')}
@@ -67,15 +69,12 @@ function App () {
           >
             Aplikasi
           </button>
-
-          {/* MENU: STOKIS (Mengarahkan ke halaman terpisah) */}
           <Link
             to='/list-stokis'
             className='text-gray-400 font-semibold hover:text-copper transition-colors'
           >
             Jaringan Stokis
           </Link>
-
           <button
             onClick={() => scrollToSection('contact')}
             className='border border-copper text-copper px-5 py-2 rounded-full font-semibold hover:bg-copper/10 transition-colors'
@@ -83,9 +82,95 @@ function App () {
             Kontak
           </button>
         </div>
+
+        {/* HAMBURGER BUTTON */}
+        <button
+          className='md:hidden flex flex-col gap-1.5 relative p-2'
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label='Toggle Menu'
+        >
+          <span
+            className={`w-7 h-1 bg-copper rounded-full transition-all duration-300 ${
+              isOpen ? 'rotate-45 translate-y-2.5' : ''
+            }`}
+          ></span>
+          <span
+            className={`w-7 h-1 bg-copper rounded-full transition-all duration-300 ${
+              isOpen ? 'opacity-0' : ''
+            }`}
+          ></span>
+          <span
+            className={`w-7 h-1 bg-copper rounded-full transition-all duration-300 ${
+              isOpen ? '-rotate-45 -translate-y-2.5' : ''
+            }`}
+          ></span>
+        </button>
       </nav>
 
-      {/* --- SECTION 1: BANNER / HERO --- */}
+      {/* --- MOBILE OVERLAY --- */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className='fixed inset-0 bg-black/90 backdrop-blur-xl z-[200] md:hidden flex flex-col items-center justify-center overflow-y-auto'
+            onClick={() => setIsOpen(false)}
+          >
+            <div className='absolute top-6 right-6 text-copper text-sm font-bold tracking-widest'>
+              CLOSE ×
+            </div>
+
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 20, opacity: 0 }}
+              className='flex flex-col items-center gap-7 py-16'
+              onClick={e => e.stopPropagation()}
+            >
+              <button
+                onClick={() => scrollToSection('home')}
+                className='text-2xl font-bold text-white hover:text-copper transition-all active:scale-95'
+              >
+                Home
+              </button>
+              <button
+                onClick={() => scrollToSection('features')}
+                className='text-2xl font-bold text-white hover:text-copper transition-all active:scale-95'
+              >
+                Keunggulan
+              </button>
+              <button
+                onClick={() => scrollToSection('product')}
+                className='text-2xl font-bold text-white hover:text-copper transition-all active:scale-95'
+              >
+                Produk
+              </button>
+              <button
+                onClick={() => scrollToSection('aplikasi')}
+                className='text-2xl font-bold text-white hover:text-copper transition-all active:scale-95'
+              >
+                Aplikasi
+              </button>
+              <Link
+                to='/list-stokis'
+                onClick={() => setIsOpen(false)}
+                className='text-2xl font-bold text-white hover:text-copper transition-all active:scale-95'
+              >
+                Jaringan Stokis
+              </Link>
+              <button
+                onClick={() => scrollToSection('contact')}
+                className='mt-6 border-2 border-copper text-copper px-12 py-3 rounded-full text-xl font-bold bg-copper/5 hover:bg-copper hover:text-black transition-all shadow-[0_0_20px_rgba(212,175,55,0.2)]'
+              >
+                Kontak Kami
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* --- SECTION 1: HERO --- */}
       <section
         id='home'
         className='min-h-screen flex flex-col justify-center items-center px-6 pt-32 pb-20 text-center bg-gradient-to-b from-[#1a1511] to-darkBg'
@@ -141,13 +226,11 @@ function App () {
           variants={fadeUpVariant}
           className='max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center'
         >
-          {/* KOLOM KIRI: TEKS */}
           <div className='order-2 lg:order-1'>
             <h2 className='text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-white leading-tight'>
               7 Keistimewaan <br />
               <span className='text-copper'>"Phoenix" Copperium</span>
             </h2>
-
             <ul className='space-y-5 mb-8'>
               {[
                 'Terbuat dari Fine Copper, Cu 999 yang memiliki nilai intrinsik & potensi kenaikan value.',
@@ -168,7 +251,6 @@ function App () {
                 </li>
               ))}
             </ul>
-
             <div className='p-5 rounded-2xl bg-gradient-to-r from-copperDark/20 to-transparent border-l-4 border-copper'>
               <p className='text-copper font-semibold text-lg italic'>
                 "7 Keistimewaan dalam 1 karya ini hanya dimiliki oleh produk
@@ -177,7 +259,6 @@ function App () {
             </div>
           </div>
 
-          {/* KOLOM KANAN: GAMBAR 4:3 */}
           <div className='order-1 lg:order-2 w-full aspect-[3/4] bg-[#111] rounded-[2rem] border border-[#222] overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.6)] group'>
             <img
               src='https://aynfa5yf4rzcovie.public.blob.vercel-storage.com/WhatsApp%20Image%202026-05-11%20at%2014.33.58.jpeg'
@@ -204,9 +285,7 @@ function App () {
           <h2 className='text-3xl md:text-5xl font-bold mb-16 text-center text-white'>
             Produk <span className='text-copper'>Eksklusif</span>
           </h2>
-
           <div className='flex flex-col lg:flex-row gap-12 md:gap-20 items-center bg-[#0a0a0a] p-6 md:p-10 rounded-[3rem] border border-[#1f1f1f] shadow-2xl'>
-            {/* Foto Produk di Kiri */}
             <div className='w-full lg:w-1/2 aspect-square md:aspect-[4/3] bg-[#111] rounded-[2rem] border border-[#222] overflow-hidden relative group'>
               <img
                 src='https://aynfa5yf4rzcovie.public.blob.vercel-storage.com/copper%20phonix.jpeg'
@@ -214,8 +293,6 @@ function App () {
                 className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out'
               />
             </div>
-
-            {/* Judul dan Deskripsi di Kanan */}
             <div className='w-full lg:w-1/2 text-left'>
               <div className='inline-block px-4 py-1 rounded-full bg-copper/10 border border-copper/30 text-copper text-sm font-bold tracking-widest mb-4'>
                 LIMITED EDITION
@@ -227,10 +304,8 @@ function App () {
                 Sebuah mahakarya yang memadukan nilai historis, keindahan seni,
                 dan keaslian material. Dicetak dengan tembaga murni
                 bersertifikat, dikemas dengan elegan dalam akrilik premium, dan
-                dilindungi oleh sistem keamanan QR Code terenkripsi. Koleksi
-                wajib bagi Anda yang mengerti nilai sejati sebuah karya.
+                dilindungi oleh sistem keamanan QR Code terenkripsi.
               </p>
-
               <ul className='space-y-4 mb-10'>
                 <li className='flex items-center text-gray-300 font-medium'>
                   <span className='text-copper mr-3 text-xl'>✔</span> Fine
@@ -245,9 +320,8 @@ function App () {
                   Sistem QR Code
                 </li>
               </ul>
-
-              <Link 
-                to="/list-stokis" 
+              <Link
+                to='/list-stokis'
                 className='inline-block w-full sm:w-auto px-10 py-4 text-lg font-bold bg-gradient-to-r from-copperDark to-copper text-black rounded-full text-center hover:scale-105 transition-transform duration-300 shadow-lg shadow-copper/20'
               >
                 Pesan Melalui Stokis
@@ -257,7 +331,7 @@ function App () {
         </motion.div>
       </section>
 
-      {/* --- SECTION 4: APLIKASI UNGGULAN --- */}
+      {/* --- SECTION 4: APLIKASI --- */}
       <section
         id='aplikasi'
         className='min-h-screen flex flex-col justify-center items-center px-6 py-24 bg-[#050505]'
@@ -271,7 +345,6 @@ function App () {
         >
           Aplikasi <span className='text-copper'>Unggulan</span>
         </motion.h2>
-
         <motion.div
           initial='hidden'
           whileInView='visible'
@@ -279,14 +352,13 @@ function App () {
           variants={fadeUpVariant}
           className='bg-[#0f0f0f] border border-[#1f1f1f] rounded-[3rem] p-8 md:p-14 max-w-5xl w-full flex flex-col md:flex-row gap-12 md:gap-16 items-center shadow-2xl'
         >
-          <div className='w-[240px] h-[500px] bg-[#1a1a1a] border-4 border-[#222] rounded-[2.5rem] flex justify-center items-center text-gray-600 font-bold flex-shrink-0 shadow-inner overflow-hidden'>
+          <div className='w-[240px] h-[500px] bg-[#1a1a1a] border-4 border-[#222] rounded-[2.5rem] flex-shrink-0 overflow-hidden'>
             <img
               src='https://aynfa5yf4rzcovie.public.blob.vercel-storage.com/WhatsApp%20Image%202026-04-27%20at%2017.20.29.jpeg'
               alt='Copperium Scanner App'
               className='w-full h-full object-cover'
             />
           </div>
-
           <div className='flex-1 text-center md:text-left'>
             <h3 className='text-3xl md:text-4xl font-bold text-white mb-6'>
               Copperium <span className='text-copper'>Scanner</span>
@@ -294,7 +366,7 @@ function App () {
             <p className='text-gray-400 leading-relaxed mb-8 text-lg'>
               Bukan sekadar aplikasi pemindai. Ini adalah alat kelas profesional
               yang mengubah ponsel Anda menjadi alat verifikasi keaslian produk
-              berkinerja tinggi, dibalut dengan desain estetika yang menawan.
+              berkinerja tinggi.
             </p>
             <ul className='space-y-4 text-left inline-block md:block mb-8'>
               <li className='flex items-center text-gray-300'>
@@ -347,9 +419,7 @@ function App () {
             Ada pertanyaan atau butuh dukungan teknis? Tim kami siap membantu
             Anda.
           </p>
-
           <div className='flex flex-col md:flex-row flex-wrap justify-center gap-12 md:gap-20'>
-            {/* 1. KANTOR PUSAT */}
             <div className='flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-4'>
               <span className='text-4xl'>📍</span>
               <div>
@@ -363,8 +433,6 @@ function App () {
                 </p>
               </div>
             </div>
-
-            {/* 2. EMAIL */}
             <div className='flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-4'>
               <span className='text-4xl'>✉️</span>
               <div>
@@ -376,8 +444,6 @@ function App () {
                 </p>
               </div>
             </div>
-
-            {/* 3. NOMOR TELEPON (BARU) */}
             <div className='flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-4'>
               <span className='text-4xl'>📞</span>
               <div>
@@ -385,18 +451,17 @@ function App () {
                   Layanan Pelanggan
                 </h4>
                 <p className='text-gray-300 leading-relaxed'>
-                  <a 
-                    href="https://wa.me/6282298525298" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="hover:text-copper transition-colors"
+                  <a
+                    href='https://wa.me/6282298525298'
+                    target='_blank'
+                    rel='noreferrer'
+                    className='hover:text-copper transition-colors'
                   >
                     0822-9852-5298
                   </a>
                 </p>
               </div>
             </div>
-
           </div>
         </motion.div>
       </section>
