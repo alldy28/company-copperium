@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+/* Perintah baru Tailwind v4 */
+@import 'tailwindcss';
+
+/* Di v4, konfigurasi warna dan font pindah ke sini */
+@theme {
+  --font-sans: 'Inter', sans-serif;
+  --color-copper: #d4af37;
+  --color-copperDark: #b87333;
+  --color-copperLight: #f3e5ab;
+  --color-darkBg: #050505;
+  --color-darkCard: #111111;
+}
+
+body {
+  background-color: var(--color-darkBg);
+  color: #ffffff;
+  overflow-x: hidden;
+}
