@@ -137,7 +137,7 @@ const ListStokis = () => {
                   rel='noreferrer'
                   className='block w-full py-2.5 md:py-4 bg-[#111] border border-gray-800 text-white text-[9px] md:text-sm font-bold text-center rounded-xl hover:bg-[#d4af37] hover:text-black transition-all uppercase'
                 >
-                  Hubungi Via Whatapps
+                  Hubungi Via Whatsapp
                 </a>
               </motion.div>
             ))}
